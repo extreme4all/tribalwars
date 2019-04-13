@@ -3,7 +3,7 @@
 // @namespace      https://github.com/extreme4all/tribalwars/blob/master/
 // @description    Extra reports
 // @include        https://*tribalwars.*/game.php?*screen=report*
-
+// @require http://code.jquery.com/jquery-3.3.1.min.js
 // ==/UserScript==
 var i
 function add(accumulator, a) {
@@ -53,7 +53,9 @@ $.get("interface.php?func=get_unit_info", function(data){
     opslag = data
 });
 opslag = opslag.getElementsByTagName("config")[0]
-for (i = 0;i<opslag.childElementCount;i++){build_time.push(opslag.children[i].children[0].innerHTML)}
+for (i = 0;i<opslag.childElementCount;i++){
+    build_time.push(opslag.children[i].children[0].innerHTML)
+}
 
 var attacker_loss = document.getElementById("attack_info_att_units")
 var def_loss = document.getElementById("attack_info_def_units")
@@ -112,6 +114,3 @@ console.log("ODA " + ODA.reduce(add))
 
 addData("attack_info_def",("ODD " + numberWithSpaces(ODD.reduce(add))))
 addData("attack_info_att",("ODA " + numberWithSpaces(ODA.reduce(add))))
-
-
-
