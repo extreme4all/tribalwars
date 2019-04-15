@@ -9,6 +9,7 @@ var i
 function add(accumulator, a) {
     return accumulator + a;
 }
+//calculating build time based on lvl
 function time(build_time_list){
 	var result_list = []
 	var building_lvl = 20
@@ -19,6 +20,7 @@ function time(build_time_list){
 	}
 	return result_list;
 }
+// formatting time
 function secondsToDhms(seconds) {
 	seconds = Number(seconds);
 	var d = Math.floor(seconds / (3600*24));
@@ -32,9 +34,11 @@ function secondsToDhms(seconds) {
 	var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
 	return dDisplay + hDisplay + mDisplay + sDisplay;
 }
+// Insert after node
 function insertAfter(newNode, referenceNode) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
+// add data to specific node
 function addData(node,mytext){
 	var d = document.getElementsByClassName("report_ReportAttack")[0]
 	var item = document.createElement("p")
@@ -43,12 +47,14 @@ function addData(node,mytext){
 	//d.insertBefore(item,d.children["attack_info_att"])
 	insertAfter(item,d.children[node])
 }
+// formating number 1 234
 function numberWithSpaces(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
 var opslag;
 var build_time = [""]
+// get request (like jquery $get)
 function ajax(url, method, callback, params = null) {
      var obj;
      try {
@@ -74,17 +80,24 @@ function ajax(url, method, callback, params = null) {
      obj.send(params);
      return obj;
  }
+ // get build times from interfaces page
 ajax('interface.php?func=get_unit_info', 'get',function(obj) {
     opslag = obj.responseXML;
     main(opslag)
 })
+// main function needed as callback for ajax function
 function main(opslag){
     opslag = opslag.getElementsByTagName("config")[0]
     for (i = 0;i<opslag.childElementCount;i++){
         build_time.push(opslag.children[i].children[0].innerHTML)
     }
     var att_loss = document.getElementById("attack_info_att_units").rows[2]
-    var def_loss = document.getElementById("attack_info_def_units").rows[2]
+	try {
+		var def_loss = document.getElementById("attack_info_def_units").rows[2]
+	}
+	catch(err){
+		console.log(err)
+	}
 	var loss_arr = [att_loss ,def_loss]
 
     var tags = ["titel","sp","zw","bl","bo","sc","lc","bb","zc","ram","kata","rid","edel"]
