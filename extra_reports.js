@@ -1,10 +1,3 @@
-// ==UserScript==
-// @name           extra reports
-// @namespace      https://github.com/extreme4all/tribalwars/blob/master/
-// @description    Extra reports
-// @include        https://*tribalwars.*/game.php?*screen=report*
-// @require http://code.jquery.com/jquery-3.3.1.min.js
-// ==/UserScript==
 var i
 function add(accumulator, a) {
     return accumulator + a;
@@ -13,7 +6,7 @@ function time(build_time_list){
 	var result_list = []
 	var building_lvl = 20
 	var time_factor = 2/3*Math.pow(1.06,-building_lvl)
-	console.log(time_factor)
+	//console.log(time_factor)
 	for (i=1;i<build_time_list.length;i++){
 		result_list[i] = time_factor*build_time_list[i];
 	}
@@ -83,62 +76,48 @@ function main(opslag){
     for (i = 0;i<opslag.childElementCount;i++){
         build_time.push(opslag.children[i].children[0].innerHTML)
     }
-    var attacker_loss = document.getElementById("attack_info_att_units")
-    var def_loss = document.getElementById("attack_info_def_units")
-    var ta = document.getElementById("attack_info_att")
-    var td = document.getElementById("attack_info_def")
-
-    var a = attacker_loss.rows[2]
-    var d = def_loss.rows[2]
-
+    var att_loss = document.getElementById("attack_info_att_units").rows[2]
+    var def_loss = document.getElementById("attack_info_def_units").rows[2]
+	var loss_arr = [att_loss ,def_loss]
+	
     var tags = ["titel","sp","zw","bl","bo","sc","lc","bb","zc","ram","kata","rid","edel"]
     var ODD_scores = ["",1,2,4,2,2,13,12,15,8,10,20,200]
-    var ODA_scores = ["",4,5,1,5,1,5,6,23,4,12,40,200]
+    var ODA_scores = ["",4,5,1,5,1,5,6,23,4,12,40,200,0]
+	var OD_score = [ODD_scores,ODA_scores]
     var real_build_time = time(build_time);
-
+	
     var rebuild_time_barrack = []
     var rebuild_time_stable = []
     var rebuild_time_workshop = []
     var ODD = []
     var ODA = []
+	var OD = [ODD,ODA]
+	var OD_text = ["ODD ","ODA "]
+	
+	var table = ["attack_info_att","attack_info_def"]
+	var t2 = ["attack_info_def","attack_info_att"]
 
-    for(i = 1;i<a.querySelectorAll("td").length;i++ ){
-        var loss= a.cells[i].innerHTML
-        ODD[i] = loss * ODD_scores[i]
-        if(i<=4){
-            rebuild_time_barrack.push(loss*real_build_time[i])
-        } else if (i<=8){
-            rebuild_time_stable.push(loss*real_build_time[i])
-        } else {
-            rebuild_time_workshop.push(loss*real_build_time[i])
-        }
-    }
-
-    addData("attack_info_att",("Rebuild time workshop: " + secondsToDhms(rebuild_time_workshop.reduce(add))))
-    addData("attack_info_att",("Rebuild time stable: " + secondsToDhms(rebuild_time_stable.reduce(add))))
-    addData("attack_info_att",("Rebuild time barack: " + secondsToDhms(rebuild_time_barrack.reduce(add))))
-    console.log("ODD " + ODD.reduce(add))
-    rebuild_time_barrack = []
-    rebuild_time_stable = []
-    rebuild_time_workshop = []
-    for(i = 1;i<d.querySelectorAll("td").length-1;i++ ){
-        loss = d.cells[i].innerHTML
-        ODA[i] = loss * ODA_scores[i]
-        if(i<=4){
-            rebuild_time_barrack.push(loss*real_build_time[i])
-        } else if (i<=8){
-            rebuild_time_stable.push(loss*real_build_time[i])
-        } else {
-            rebuild_time_workshop.push(loss*real_build_time[i])
-        }
-    }
-
-    addData("attack_info_def",("Rebuild time workshop: " + secondsToDhms(rebuild_time_workshop.reduce(add))))
-    addData("attack_info_def",("Rebuild time stable: " + secondsToDhms(rebuild_time_stable.reduce(add))))
-    addData("attack_info_def",("Rebuild time barack: " + secondsToDhms(rebuild_time_barrack.reduce(add))))
-    console.log("ODA " + ODA.reduce(add))
-
-    addData("attack_info_def",("ODD " + numberWithSpaces(ODD.reduce(add))))
-    addData("attack_info_att",("ODA " + numberWithSpaces(ODA.reduce(add))))
-
+	for (loss_type = 0; loss_type < loss_arr.length;loss_type++){
+		for(i = 1;i < loss_arr[loss_type].querySelectorAll("td").length;i++ ){
+			var loss= loss_arr[loss_type].cells[i].innerHTML
+			OD[loss_type][i] = loss *OD_score[loss_type][i]
+			if(i<=4){
+				rebuild_time_barrack.push(loss*real_build_time[i])
+			} else if (i<=8){
+				rebuild_time_stable.push(loss*real_build_time[i])
+			} else {
+				rebuild_time_workshop.push(loss*real_build_time[i])
+			}
+		}
+		addData(table[loss_type],("Rebuild time workshop: " + secondsToDhms(rebuild_time_workshop.reduce(add))))
+		addData(table[loss_type],("Rebuild time stable: " + secondsToDhms(rebuild_time_stable.reduce(add))))
+		addData(table[loss_type],("Rebuild time barack: " + secondsToDhms(rebuild_time_barrack.reduce(add))))
+		//addData(t2[loss_type],(OD_text[loss_type] + numberWithSpaces(OD[loss_type].reduce(add))))
+		rebuild_time_barrack = []
+		rebuild_time_stable = []
+		rebuild_time_workshop = []
+	}
+	for (i = 0; i<OD.length;i++){
+		addData(t2[i],(OD_text[i] + numberWithSpaces(OD[i].reduce(add))))
+	}
 }
