@@ -20,17 +20,17 @@ function time(build_time_list){
 	return result_list;
 }
 function secondsToDhms(seconds) {
-seconds = Number(seconds);
-var d = Math.floor(seconds / (3600*24));
-var h = Math.floor(seconds % (3600*24) / 3600);
-var m = Math.floor(seconds % 3600 / 60);
-var s = Math.floor(seconds % 60);
+	seconds = Number(seconds);
+	var d = Math.floor(seconds / (3600*24));
+	var h = Math.floor(seconds % (3600*24) / 3600);
+	var m = Math.floor(seconds % 3600 / 60);
+	var s = Math.floor(seconds % 60);
 
-var dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
-var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
-var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
-var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
-return dDisplay + hDisplay + mDisplay + sDisplay;
+	var dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
+	var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+	var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+	var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+	return dDisplay + hDisplay + mDisplay + sDisplay;
 }
 function insertAfter(newNode, referenceNode) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
@@ -89,7 +89,7 @@ function main(opslag){
 
     var tags = ["titel","sp","zw","bl","bo","sc","lc","bb","zc","ram","kata","rid","edel"]
     var ODD_scores = ["",1,2,4,2,2,13,12,15,8,10,20,200]
-    var ODA_scores = ["",4,5,1,5,1,5,6,23,4,12,40,200,0]
+    var ODA_scores = ["",4,5,1,5,1,5,6,23,4,12,40,200,0] //extra value cause militia
 	var OD_score = [ODD_scores,ODA_scores]
     var real_build_time = time(build_time);
 
@@ -103,7 +103,7 @@ function main(opslag){
 
 	var table = ["attack_info_att","attack_info_def"]
 	var t2 = ["attack_info_def","attack_info_att"]
-
+	try {
 	for (var loss_type = 0; loss_type < loss_arr.length;loss_type++){
 		for(i = 1;i < loss_arr[loss_type].querySelectorAll("td").length;i++ ){
 			var loss= loss_arr[loss_type].cells[i].innerHTML
@@ -116,6 +116,7 @@ function main(opslag){
 				rebuild_time_workshop.push(loss*real_build_time[i])
 			}
 		}
+		//order is reverse cause we append at the top
 		addData(table[loss_type],("Rebuild time workshop: " + secondsToDhms(rebuild_time_workshop.reduce(add))))
 		addData(table[loss_type],("Rebuild time stable: " + secondsToDhms(rebuild_time_stable.reduce(add))))
 		addData(table[loss_type],("Rebuild time barack: " + secondsToDhms(rebuild_time_barrack.reduce(add))))
@@ -123,6 +124,10 @@ function main(opslag){
 		rebuild_time_barrack = []
 		rebuild_time_stable = []
 		rebuild_time_workshop = []
+	}
+	}
+	catch(err){
+		console.log(err)
 	}
 	for (i = 0; i<OD.length;i++){
 		addData(t2[i],(OD_text[i] + numberWithSpaces(OD[i].reduce(add))))
