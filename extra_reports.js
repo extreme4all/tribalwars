@@ -1,3 +1,7 @@
+// @namespace      https://github.com/extreme4all/tribalwars/blob/master/
+// @description    Extra reports
+// @include        https://*tribalwars.*/game.php?*screen=report*
+// ==/UserScript==
 var i
 function add(accumulator, a) {
     return accumulator + a;
