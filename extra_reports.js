@@ -83,13 +83,13 @@ function main(opslag){
     var att_loss = document.getElementById("attack_info_att_units").rows[2]
     var def_loss = document.getElementById("attack_info_def_units").rows[2]
 	var loss_arr = [att_loss ,def_loss]
-	
+
     var tags = ["titel","sp","zw","bl","bo","sc","lc","bb","zc","ram","kata","rid","edel"]
     var ODD_scores = ["",1,2,4,2,2,13,12,15,8,10,20,200]
     var ODA_scores = ["",4,5,1,5,1,5,6,23,4,12,40,200,0]
 	var OD_score = [ODD_scores,ODA_scores]
     var real_build_time = time(build_time);
-	
+
     var rebuild_time_barrack = []
     var rebuild_time_stable = []
     var rebuild_time_workshop = []
@@ -97,11 +97,11 @@ function main(opslag){
     var ODA = []
 	var OD = [ODD,ODA]
 	var OD_text = ["ODD ","ODA "]
-	
+
 	var table = ["attack_info_att","attack_info_def"]
 	var t2 = ["attack_info_def","attack_info_att"]
 
-	for (loss_type = 0; loss_type < loss_arr.length;loss_type++){
+	for (var loss_type = 0; loss_type < loss_arr.length;loss_type++){
 		for(i = 1;i < loss_arr[loss_type].querySelectorAll("td").length;i++ ){
 			var loss= loss_arr[loss_type].cells[i].innerHTML
 			OD[loss_type][i] = loss *OD_score[loss_type][i]
