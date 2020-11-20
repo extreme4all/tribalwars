@@ -3,19 +3,32 @@
 // @namespace      https://github.com/extreme4all/tribalwars/blob/master/
 // @description    Extra reports
 // @include        https://*tribalwars.*/game.php?*screen=report*
-// @require http://code.jquery.com/jquery-3.3.1.min.js
+// @require        http://code.jquery.com/jquery-3.3.1.min.js
 // ==/UserScript==
 var i
+var barack_lvl = 25
+var stable_lvl = 20
+var workplace_lvl = 3
+
 function add(accumulator, a) {
     return accumulator + a;
 }
 //calculating build time based on lvl
 function time(build_time_list){
+    // console.log(build_time_list)
 	var result_list = []
-	var building_lvl = 20
-	var time_factor = 2/3*Math.pow(1.06,-building_lvl)
+    var building_lvl
+    var time_factor
 	//console.log(time_factor)
 	for (i=1;i<build_time_list.length;i++){
+        if (i <=4){
+            building_lvl = barack_lvl
+        }else if (i <= 8) {
+            building_lvl = stable_lvl
+        }else {
+            building_lvl = workplace_lvl
+        }
+        time_factor = 2/3*Math.pow(1.06,-building_lvl)
 		result_list[i] = time_factor*build_time_list[i];
 	}
 	return result_list;
@@ -87,6 +100,7 @@ ajax('interface.php?func=get_unit_info', 'get',function(obj) {
 })
 // main function needed as callback for ajax function
 function main(opslag){
+    console.log(opslag)
     opslag = opslag.getElementsByTagName("config")[0]
     for (i = 0;i<opslag.childElementCount;i++){
         build_time.push(opslag.children[i].children[0].innerHTML)
