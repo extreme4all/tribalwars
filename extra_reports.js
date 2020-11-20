@@ -5,6 +5,7 @@
 // @include        https://*tribalwars.*/game.php?*screen=report*
 // @require        http://code.jquery.com/jquery-3.3.1.min.js
 // ==/UserScript==
+// validation https://support.innogames.com/t13125805
 var i
 var barack_lvl = 25
 var stable_lvl = 20
